@@ -1,0 +1,47 @@
+<!------------------------------------------------------------
+  文件名:   ch4-5.html
+  第三章:   Vue.observable
+  开发平台: VSCode 1.39.1
+  Vue 实战小慕读书中后台 By Sam
+------------------------------------------------------------->
+<html>
+  <head>
+    <title>Vue.observable</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  </head>
+  <body>
+    <div id="root">
+      {{message}}
+      <button @click="change">Change</button>
+    </div>
+    <script>
+      // 将传入对象变成响应式数据（此处的state是全局的）
+      // observable原来是Vue内部使用，现在对外公开API，这样在需要不大的使用，用此API来进行全局状态管理
+      // 内部使用Object.defineProperty(targetObj, key, {get:function,set:function})
+      // get：收集依赖 set：改变变量状态，通知变化
+      // 返回值中的_ob_属性内value中有的属性，那么这个属性内数据就是响应式的
+      // 返回值会有getter、setter方法
+      const state = Vue.observable({ message: "Vue 2.6" });
+      // mutation改变响应式数据的值
+      const mutation = {
+        setMessage(value) {
+          state.message = value;
+        }
+      };
+      new Vue({
+        el: "#root",
+        // 通过计算属性监听响应式数据是否变化
+        computed: {
+          message() {
+            return state.message;
+          }
+        },
+        methods: {
+          change() {
+            mutation.setMessage("Vue 3.0");
+          }
+        }
+      });
+    </script>
+  </body>
+</html>

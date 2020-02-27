@@ -1,0 +1,76 @@
+<!------------------------------------------------------------
+  文件名:   ch3-4.html
+  第三章:   Vue.extend 用法2
+  开发平台: VSCode 1.39.1
+  Vue 实战小慕读书中后台 By Sam
+------------------------------------------------------------->
+<html>
+  <head>
+    <title>Vue.extend 用法2</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <style>
+      #loading-wrapper {
+        position: fixed;
+        top: 0;
+        left: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.7);
+        color: #fff;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root">
+      <button @click="showLoading">显示Loading</button>
+    </div>
+    <script>
+      const LoadingComponent = Vue.extend({
+        template: '<div id="loading-wrapper">{{msg}}</div>',
+        props: {
+          msg: {
+            type: String,
+            default: 'loading...'
+          }
+        },
+        name: "LoadingComponent"
+      });
+      function Loading(msg) {
+        const div = document.createElement("div");
+        div.setAttribute("id", "loading-wrapper");
+        document.body.append(div);
+        // ---------------------------------关键语句----------------------------------------------
+        // 实例化组件并挂载到指定dom上（这里传入的props会覆盖掉创建LoadingComponent构造函数时的props）
+        new LoadingComponent({
+            props: {
+                msg: {
+                    type: String,
+                    default: 'loading...'
+                }
+            },
+            // 调用$mount将组件挂载到id为loading-wrapper的div上，这时组件上的元素会覆盖掉目标元素div
+            // 之后移除的是组件中id为loading-wrapperd的元素，不是通过document.body.append放入的元素
+        }).$mount("#loading-wrapper");
+        return () => {
+          document.body.removeChild(document.getElementById("loading-wrapper"));
+        };
+      }
+      Vue.prototype.$loading = Loading;
+      new Vue({
+        el: "#root",
+        methods: {
+          showLoading() {
+            // 返回的函数，是隐藏loading效果方法
+            const hide = this.$loading("正在加载，请稍等...");
+            setTimeout(() => {
+              hide();
+            }, 2000);
+          }
+        }
+      });
+    </script>
+  </body>
+</html>

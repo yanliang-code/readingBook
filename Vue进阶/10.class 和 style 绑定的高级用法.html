@@ -1,0 +1,58 @@
+<!------------------------------------------------------------
+  文件名:   ch4-4.html
+  第三章:   class 和 style 绑定的高级用法
+  开发平台: VSCode 1.39.1
+  Vue 实战小慕读书中后台 By Sam
+------------------------------------------------------------->
+<html>
+  <head>
+    <title>class 和 style 绑定的高级用法</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  </head>
+  <body>
+    <div id="root">
+      <div :class="['active', 'normal']">数组绑定多个class</div>
+      <div :class="[{active: isActive}, 'normal']">数组包含对象绑定class</div>
+      <div :class="[showWarning(), 'normal']">数组包含方法绑定class</div>
+      <div :style="[warning, bold]">数组绑定多个style</div>
+      <div :style="[warning, mix()]">数组包含方法绑定style</div>
+      <div :style="{ display: ['-webkit-box', '-ms-flexbox', 'flex'] }">style多重值</div>
+      <!-- 
+        绑定class
+            数组中是class字符串类型名、直接方法调用、style对象
+            对象中是变量类型
+        绑定style
+            数组中是style对象、直接方法调用
+            对象中是属性对应数组，数组中对应多个属性值，优先使用数组中最后一个值，
+            若无效，向前逐一匹配，直到适合当前浏览器环境
+       -->
+    </div>
+    <script>
+      new Vue({
+        el: '#root',
+        data() {
+          return {
+            isActive: true,
+            warning: {
+              color: 'orange'
+            },
+            bold: {
+              fontWeight: 'bold'
+            }
+          }
+        },
+        methods: {
+          showWarning() {
+            return 'warning'
+          },
+          mix() {
+            return {
+              ...this.bold,
+              fontSize: 20
+            }
+          }
+        }
+      })
+    </script>
+  </body>
+</html>

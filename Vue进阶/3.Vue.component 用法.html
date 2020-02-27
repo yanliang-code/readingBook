@@ -1,0 +1,48 @@
+<!------------------------------------------------------------
+  文件名:   ch3-3.html
+  第三章:   Vue.component 用法
+  开发平台: VSCode 1.39.1
+  Vue 实战小慕读书中后台 By Sam
+------------------------------------------------------------->
+<html>
+  <head>
+    <title>Vue.component 用法</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  </head>
+  <body>
+    <div id="root">
+      <test :msg="message"></test>
+    </div>
+    <script>
+      // 全局声明组件（组件名，对象：存储各种属性 data、生命周期、props、computed、watch、filters 必须有template）
+      Vue.component("test", {
+        //  template模板，用于渲染页面
+        template: "<div>{{msg}}</div>",
+        //  接受父组件的传参
+        props: {
+          msg: {
+            type: String,
+            default: "default message"
+          }
+        },
+        watch: {
+            msg:{
+                handler:function(newValue, oldValue){
+                    console.log('newValue===', newValue);
+                    console.log('oldValue===', oldValue);
+                },
+                immediate: true
+            }
+        }
+      });
+      new Vue({
+        el: "#root",
+        data() {
+          return {
+            message: "Test Component"
+          };
+        }
+      });
+    </script>
+  </body>
+</html>

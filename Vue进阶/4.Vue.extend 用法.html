@@ -1,0 +1,59 @@
+<!------------------------------------------------------------
+  文件名:   ch3-4.html
+  第三章:   Vue.extend 用法（生成组件的构造函数）
+  开发平台: VSCode 1.39.1
+  Vue 实战小慕读书中后台 By Sam
+------------------------------------------------------------->
+<html>
+  <head>
+    <title>Vue.extend 用法</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  </head>
+  <body>
+    <div id="root">
+      <Test :msg="message"></Test>
+    </div>
+    <script>
+    /*
+      // Vue.extend生成一个构造函数
+      const component = Vue.extend({
+        template: "<div>{{msg}}</div>",
+        props: {
+          msg: {
+            type: String,
+            default: "default message"
+          }
+        }
+      });
+      // 以key-value的形式将Test与VueComponent(options)绑定
+      Vue.component("Test", component);
+    */
+
+ 
+      // 若传入对象中有name属性，此时已经将构造函数挂载Vue的component上
+      const component = Vue.extend({
+        name: "Test",
+        template: "<div>{{msg}}</div>",
+        props: {
+          msg: {
+            type: String,
+            default: "default message"
+          }
+        }
+      });
+    
+      // 没有传入参数二，则直接通过参数一在Vue.option上匹配
+      Vue.component("Test");
+ 
+      let vm = new Vue({
+        el: "#root",
+        data() {
+          return {
+            message: "Test Extend Component"
+          };
+        }
+      });
+      console.log(vm)
+    </script>
+  </body>
+</html>

@@ -1,0 +1,100 @@
+<!------------------------------------------------------------
+  文件名:   ch3-2.html
+  第三章:   directive 用法
+  开发平台: VSCode 1.39.1
+  Vue 实战小慕读书中后台 By Sam
+------------------------------------------------------------->
+<html>
+  <head>
+    <title>directive 用法</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  </head>
+  <!-- 
+    原来的思路：每个组件写好loading元素，通过变量进行显隐
+        缺点：代码有侵入性
+
+    现在的思路：通过指令，在变量变化触发时，动态插入和移除loding元素
+   -->
+  <body>
+    <div id="root">
+      <div v-loading="isLoading">{{data}}</div>
+      <button @click="update">更新</button>
+    </div>
+    <script>
+      /*
+      // Vue静态方法directive进行定义loading指令
+      Vue.directive("loading", {
+        // 指令绑定值变化的触发（dom对象，指令绑定值，domd对象转换后的Vonde节点对象）
+        update(el, binding, vnode) {
+          // 指令绑定值为true，动态创建div，将div遮罩层插入body层
+          if (binding.value) {
+            const div = document.createElement("div");
+            div.innerText = "加载中...";
+            div.setAttribute("id", "loading");
+            div.style.position = "absolute";
+            div.style.left = 0;
+            div.style.top = 0;
+            div.style.width = "100%";
+            div.style.height = "100%";
+            div.style.display = "flex";
+            div.style.justifyContent = "center";
+            div.style.alignItems = "center";
+            div.style.color = "white";
+            div.style.background = "rgba(0, 0, 0, .7)";
+            document.body.append(div);
+            // false，移除遮罩层
+          } else {
+            document.body.removeChild(document.getElementById("loading"));
+          }
+        }
+      });
+
+      */
+      // 参数二两种传值方式
+      // 对象："loading"与对象会以key-value的形式赋值给Vue.options.directives上
+      // 函数：会默认将此函数与bind与update绑定形成对象，后续同上
+      Vue.directive("loading", 
+        function update(el, binding, vnode) {
+          if (binding.value) {
+            const div = document.createElement("div");
+            div.innerText = "加载中...";
+            div.setAttribute("id", "loading");
+            div.style.position = "absolute";
+            div.style.left = 0;
+            div.style.top = 0;
+            div.style.width = "100%";
+            div.style.height = "100%";
+            div.style.display = "flex";
+            div.style.justifyContent = "center";
+            div.style.alignItems = "center";
+            div.style.color = "white";
+            div.style.background = "rgba(0, 0, 0, .7)";
+            document.body.append(div);
+          } else {
+            // 由于最初dom渲染拆入时触发的bind函数也绑定的此函数
+            // 开始默认false，但是loading的元素还没有生成，需要判空
+            let loadingNode = document.getElementById("loading");
+            loadingNode && document.body.removeChild(loadingNode);
+          }
+      });
+      new Vue({
+        el: "#root",
+        data() {
+          return {
+            isLoading: false,
+            data: ""
+          };
+        },
+        methods: {
+          update() {
+            this.isLoading = true;
+            setTimeout(() => {
+              this.data = "用户数据";
+              this.isLoading = false;
+            }, 3000);
+          }
+        }
+      });
+    </script>
+  </body>
+</html>

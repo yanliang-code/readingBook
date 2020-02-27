@@ -1,0 +1,178 @@
+<!------------------------------------------------------------
+  文件名:   ch4-3.html
+  第三章:   监听器 watch
+  开发平台: VSCode 1.39.1
+  Vue 实战小慕读书中后台 By Sam
+------------------------------------------------------------->
+<html>
+  <head>
+    <title>监听器 watch</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  </head>
+  <body>
+    <div id="root">
+      <h3>Watch 用法1：常见用法</h3>
+      <input v-model="message" />
+      <span>{{copyMessage}}</span>
+    </div>
+    <div id="root2">
+      <h3>Watch 用法2：绑定方法</h3>
+      <input v-model="message" />
+      <span>{{copyMessage}}</span>
+    </div>
+    <div id="root3">
+      <h3>Watch 用法3：deep + handler</h3>
+      <input v-model="deepMessage.a.b" />
+      <span>{{copyMessage}}</span>
+    </div>
+    <div id="root4">
+      <h3>Watch 用法4：immediate</h3>
+      <input v-model="message" />
+      <span>{{copyMessage}}</span>
+    </div>
+    <div id="root5">
+      <h3>Watch 用法5：绑定多个 handler</h3>
+      <input v-model="message" />
+      <span>{{copyMessage}}</span>
+    </div>
+    <div id="root6">
+      <h3>Watch 用法6：监听对象属性</h3>
+      <input v-model="deepMessage.a.b" />
+      <span>{{copyMessage}}</span>
+    </div>
+
+    <script>
+      new Vue({
+        el: "#root",
+        watch: {
+          // 正常写法
+          message(value) {
+            this.copyMessage = value;
+          }
+        },
+        data() {
+          return {
+            message: "Hello Vue",
+            copyMessage: ""
+          };
+        }
+      });
+      new Vue({
+        el: "#root2",
+        watch: {
+          // 直接使用methods内定义的方法
+          message: "handleMessage"
+        },
+        data() {
+          return {
+            message: "Hello Vue",
+            copyMessage: ""
+          };
+        },
+        methods: {
+          handleMessage(value) {
+            this.copyMessage = value;
+          }
+        }
+      });
+      new Vue({
+        el: "#root3",
+        watch: {
+          // 深层监听（对象内层属性）
+          deepMessage: {
+            handler: "handleDeepMessage",
+            deep: true
+          }
+        },
+        data() {
+          return {
+            deepMessage: {
+              a: {
+                b: "Deep Message"
+              }
+            },
+            copyMessage: ""
+          };
+        },
+        methods: {
+          handleDeepMessage(value) {
+            this.copyMessage = value.a.b;
+          }
+        }
+      });
+      new Vue({
+        el: "#root4",
+        watch: {
+          //默认在message声明后赋值触发一次
+          message: {
+            handler: "handleMessage",
+            immediate: true
+          }
+        },
+        data() {
+          return {
+            message: "Hello Vue",
+            copyMessage: ""
+          };
+        },
+        methods: {
+          handleMessage(value) {
+            this.copyMessage = value;
+          }
+        }
+      }),
+        new Vue({
+          el: "#root5",
+          watch: {
+            // 支持数组格式同时绑定多个函数，数组内对象、字符串、函数三种方式都可以
+            // 逻辑复制时，可以进行拆分，共同的进行复用
+            message: [
+              {
+                //   第一个触发
+                handler: "handleMessage"
+              },
+              //   第二个触发
+              "handleMessage2",
+              //   第三个触发
+              //   注意：三次触发的函数的传入值都是一样的，就是监听变量变化后的值
+              function(value) {
+                this.copyMessage = this.copyMessage + "...";
+              }
+            ]
+          },
+          data() {
+            return {
+              message: "Hello Vue",
+              copyMessage: ""
+            };
+          },
+          methods: {
+            handleMessage(value) {
+              this.copyMessage = value;
+            },
+            handleMessage2(value) {
+              this.copyMessage = this.copyMessage + "*";
+            }
+          }
+        });
+      new Vue({
+        el: "#root6",
+        watch: {
+          // 直接指定对象的内层属性，这样就不需要deep深度监听
+          "deepMessage.a.b": "handleMessage"
+        },
+        data() {
+          return {
+            deepMessage: { a: { b: "Hello Vue" } },
+            copyMessage: ""
+          };
+        },
+        methods: {
+          handleMessage(value) {
+            this.copyMessage = value;
+          }
+        }
+      });
+    </script>
+  </body>
+</html>
