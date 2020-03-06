@@ -1,0 +1,15 @@
+1.npm run build 打包
+2.压缩后的文件解析
+    Element-UI入门\element-test\dist\js\app.de7b0747.js（src下的代码打包后文件）
+    Element-UI入门\element-test\dist\js\chunk-vendors.d0a54631.js（依赖包打包后的文件--vendor库）
+3.按需引入
+    elementUI默认引入是全量引入，没有使用到的组件也会打包，导致vendor库过大
+    npm i -D babel-plugin-component 引入按需引入插件
+    plugin: [
+      'component',
+      {
+        "libraryName": "element-ui",
+        "styleLibraryName": "theme-chalk"
+      }
+    ]
+    配置之后，引入方式：import { Button, Message }  from "element-ui";（自动引入样式库）

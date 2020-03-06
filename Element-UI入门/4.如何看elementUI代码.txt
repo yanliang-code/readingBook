@@ -1,0 +1,2 @@
+D:\coding\readingBook\Element-UI入门\element-test1\node_modules\element-ui\src\index.js为入口
+1.通过Vue.use引入elementUI组件，会调用index.js中的install方法，遍历组件库中所有组件使用Vue.component进行全局声明

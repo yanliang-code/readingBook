@@ -1,0 +1,9 @@
+1.初始化项目
+vue create element-test
+2.安装
+npm i element-ui -S
+3.Vue 插件
+import ElementUI from 'element-ui'
+Vue.use(ElementUI)
+4.引用样式
+import 'element-ui/lib/theme-chalk/index.css'

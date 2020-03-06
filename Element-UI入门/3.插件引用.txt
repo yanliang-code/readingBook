@@ -1,0 +1,2 @@
+可以通过 element 插件快速集成 element-ui
+vue add element --> Fully import(整体引用) ?  import on demand ? 
