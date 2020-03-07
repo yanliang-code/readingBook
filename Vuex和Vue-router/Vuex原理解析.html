@@ -17,51 +17,58 @@
     </div>
     <script>
       function registerPlugin(Vue) {
-        const vuex = {}
+        const vuex = {};
+        // vue实例，没有绑定任何dom，只用于data内的状态管理
         vuex._vm = new Vue({
           data: {
+            // 所有响应式数据都存在Dep中，发生变化后，Dep会通知Watcher
+            // Watcher内存放所有依赖于Dep中数据的函数
             message: 'hello vue.js'
           }
-        })
-        vuex.state = vuex._vm
+        });
+        // vuex下的state就是vue实例内的响应式数据
+        vuex.state = vuex._vm;
+        // 通过mutations更新响应式数据
         vuex.mutations = {
           setMessage(value) {
-            vuex.state.message = value
+            vuex.state.message = value;
           }
-        }
+        };
         function init() {
-          this.$store = vuex
+          this.$store = vuex;
         }
+        // 混入：所有的vue实例在beforeCreate周期内调用init方法
+        // 所以在下面的三个new Vue时都会调用init方法
         Vue.mixin({
           beforeCreate: init
-        })
+        });
       }
-      Vue.use(registerPlugin)
+      Vue.use(registerPlugin);
       new Vue({
         el: '#root',
         computed: {
           data() {
-            return this.$store.state.message
+            return this.$store.state.message;
           }
         }
-      })
+      });
       new Vue({
         el: '#root2',
         computed: {
           data2() {
-            return this.$store.state.message
+            return this.$store.state.message;
           }
         }
-      })
+      });
       new Vue({
         el: '#root3',
         methods: {
           change() {
-            const newValue = this.$store.state.message + '.'
-            this.$store.mutations.setMessage(newValue)
+            const newValue = this.$store.state.message + '.';
+            this.$store.mutations.setMessage(newValue);
           }
         }
-      })
+      });
     </script>
   </body>
 </html>

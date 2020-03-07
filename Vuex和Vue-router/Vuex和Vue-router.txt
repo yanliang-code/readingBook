@@ -1,0 +1,32 @@
+1.vuex
+vuex响应式数据依赖于vue实例
+this.$store是由于use vuex插件时，会进行vue声明周期的混入，在befroeCreate会调用将包装过的vue对象赋值给this.$store
+
+2.v-router
+a、通过对原生的属性和方法进行封装，具体细节不懂
+
+b、全局路由与局部路由（代码：Vuex和Vue-router\v-router\src\components\A.vue）
+    1.每次浏览器地址栏切换，都会触发全局路由的三个生命周期，只会触发组件的一个生命周期
+    2.局部路由beforeRouteEnter、beforeRouteUpdate是在全局路由beforeEach、beforeResolve之间调用（不能同时触发）
+    3.局部路由beforeRouteUpdate触发时，由于此组件已实例化，不会在执行组件的生命周期
+    4.局部路由beforeRouteLeave被触发时在全局路由生命周期之前执行
+
+    扩展：vue-element-admin就是通过路由此特性（全局与局部路由）进行权限的验证以及token的判断
+
+c、路由元信息（meta）
+    为路由数据添加额外信息
+    案例：动态改变标题
+    思路：
+        1.通过路由的生命周期beforeEach将路由信息赋值给document.title（推荐）
+        2.通过Vue.mixin给每个组件在指定生命周期之前，先执行指定函数，指定函数内获取路由信息赋值给document.title
+    代码：Vuex和Vue-router\v-router\src\router.js
+
+    // this.$router 路由对象  打印日志显示 VueRouter对象
+    // this.$route  路由信息  打印日志显示 普通对象
+
+d、动态添加路由
+    this.$router.addRoutes() 括号内参数为对象数组（this.$router.options.routes一致格式），每个对象都是一条路由信息
+    经常用于路由与权限的捆绑，不同权限，动态添加不同的路由配置
+
+template模板中普通函数与计算属性的触发的区别
+代码：Vuex和Vue-router\v-router\src\components\HelloWorld.vue
